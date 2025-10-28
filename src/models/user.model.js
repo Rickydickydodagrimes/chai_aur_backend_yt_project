@@ -54,7 +54,7 @@ const userSchema = new Schema({
 
 }, {timestamps: true});
 
-//arrow function doesnt know the context i.e cant use this keyword, 
+//arrow function doesnt know the context i.e cant use 'this' keyword, 
 // so we define the callback function with function keyword.
 userSchema.pre("save", async function (next) {    
     if (!this.password.isModified("password")) return next();  //if password isnt modified or changed do not run the below code (to avoid multiple encryptions)
@@ -63,7 +63,7 @@ userSchema.pre("save", async function (next) {
    next();
 });
 
-//making a custom method to match user-typed password with encypted password.
+//making a custom method to match user-typed password with encrypted password.
 userSchema.methods.isPasswordCorrect = async function (password){
    return await bcrypt.compare(password, this.password)
 }
