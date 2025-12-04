@@ -17,7 +17,9 @@ const registerUser = asyncHandler(async (req, res) => {
     */
 
     //1. getting user details
+
     const {fullName, email, username, password} = req.body;
+
     console.log("email : ", email);
 
     // if(fullName === ""){
@@ -33,7 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     //3. checking if the user already exists (by username and email)
-    const existingUser = User.findOne({
+    const existingUser = await User.findOne({
         $or: [{ username }, { email }]
     })
  
@@ -42,8 +44,14 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     //4. checking for avatar and images
+     //console.log(req.files)
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
 
     //avatar is required
     if(!avatarLocalPath){
@@ -52,7 +60,9 @@ const registerUser = asyncHandler(async (req, res) => {
     
     //5. uploading images, avatar to cloudinary
      const avatar = await uploadOnCloudinary(avatarLocalPath);
+     console.log("Cloudinary avatar result:", avatar);
      const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+     
 
      if(!avatar){
         throw new apiError(400, "Avatar is required")
@@ -83,4 +93,4 @@ const registerUser = asyncHandler(async (req, res) => {
 
 })
 
-export {registerUser};
+export {registerUser};  

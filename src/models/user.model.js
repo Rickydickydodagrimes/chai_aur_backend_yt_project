@@ -20,7 +20,7 @@ const userSchema = new Schema({
         trim: true
     },
 
-    fullname: {
+    fullName: {
         type: String,
         required: true,
         trim: true,
@@ -57,7 +57,7 @@ const userSchema = new Schema({
 //arrow function doesnt know the context i.e cant use 'this' keyword, 
 // so we define the callback function with function keyword.
 userSchema.pre("save", async function (next) {    
-    if (!this.password.isModified("password")) return next();  //if password isnt modified or changed do not run the below code (to avoid multiple encryptions)
+    if (!this.isModified("password")) return next();  //if password isnt modified or changed do not run the below code (to avoid multiple encryptions)
 
    this.password = await bcrypt.hash(this.password, 10);
    next();
