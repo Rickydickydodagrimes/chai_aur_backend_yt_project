@@ -7,8 +7,10 @@ import { User } from "../models/user.model.js";
 export const verifyJWT = asyncHandler( async (req, _, next) => {  // if any of the parameters (req, res, next) is not being used,
                                                                   //  we can just put an underscore instead of it
    try {
-    const token =  req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
- 
+    const token =  req.cookies?.accessToken || req.header("authorization")?.replace("Bearer ", "")
+    console.log(req. cookies)
+    console.log(req. header["authorization"])
+    console.log(token)
     if(!token){
      throw new apiError(401, "Unauthorized request")
     }
